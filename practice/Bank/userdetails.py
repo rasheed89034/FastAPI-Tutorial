@@ -59,3 +59,30 @@ def signup(signup:SignUp):
         "Email" : signup.email,
         "Password" : "Valid and Strong Password"
     }
+
+@app.get("/searchUser")
+def searchUser(
+    email : str,
+    password : str
+):
+    cursor.execute(
+        "SELECT id, name,age,address,email,password from signup WHERE email = ?",
+        (email,)
+    )
+    user_data = cursor.fetchone()
+
+    if user_data:
+        stored_password = user_data[5]
+
+        if password == stored_password:
+            return{
+                "Status" : "User Found",
+                "Name" : user_data[1],
+                "Age" : user_data[2],
+                "Address" : user_data[3],
+                "Email" : user_data[4]
+            }
+        else:
+            return "Incorrect Password"
+    else:
+        return "Invalid Email"
