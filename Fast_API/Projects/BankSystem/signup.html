@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bank Signup</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding-top: 50px; }
+        .form-container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 350px; }
+        h2 { text-align: center; color: #007bff; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Bank Signup</h2>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        <form action="http://127.0.0.1:8000/signup" method="POST">
+            <input type="text" name="name" placeholder="Full Name" required>
+            <input type="number" name="age" placeholder="Age" required>
+            <input type="text" name="address" placeholder="Address" required>
+            <select name="account_type" required style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+                <option value="" disabled selected>Select Account Type</option>
+                <option value="Current">Current Account</option>
+                <option value="Saving">Saving Account</option>
+            </select>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password (Min 8 chars)" required>
+            <button type="submit">Create Account</button>
+        </form>
+        <div style="margin-top: 15px; text-align: center;">
+            <p style="font-size: 14px; color: #555;">Already have an account?</p>
+            <button onclick="window.location.href='/login'" style="background: #28a745; width: 100%;">Go to Login</button>
+        </div>
+    </div>
+</body>
+</html>
