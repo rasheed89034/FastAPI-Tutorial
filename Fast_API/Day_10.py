@@ -48,7 +48,7 @@ def userData(
     return{
         "Name is " : user.name,
         "Email is ": user.email,
-        "Password is ": "Valid & String"
+        "Password is ": "Valid & Strong"
     }
 
 
@@ -100,6 +100,15 @@ def updateUserData(
             return {"Error": "Incorrect ID for this email"}
     else:
         return {"Error": "User not found"}
+
+@app.delete("/delete")
+def deleteUserData(id:str):
+    for email, user_data in userDataDict.items():
+        if user_data["Id is "] == id:
+            del userDataDict[email]
+        return {"Message": f"User with ID {id} deleted successfully"}
+        
+    return {"Error": "User ID not found"}
 
         
 
