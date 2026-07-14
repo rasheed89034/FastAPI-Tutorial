@@ -5,10 +5,10 @@ import re
 app = FastAPI()
 userDataDict = {}
 
-class StudentDetails(BaseModel):
+
+
+class UserCredentials(BaseModel):
     id : str
-    name : str
-    address : str 
     email : EmailStr
     password : str = Field(min_length=8,max_length=20)
 
@@ -27,45 +27,30 @@ class StudentDetails(BaseModel):
 
         return value
 
+class StudentDetails(UserCredentials):
+    name : str
+    address : str 
 
 @app.post("/userData")
 def userData(
-    id:str,
-    name:str,
-    address : str,
-    email : str,
-    password : str
-
+    user : StudentDetails
 ):
-    try:
-        user = StudentDetails(
-            id = id,
-            name = name,
-            address = address,
-            email = email,
-            password = password
-        )
-        if user.email in userDataDict:
-            return user.email,"Already registor"
-        userDataDict[user.email] = {
-            "Id is ": id,
-            "Name is " : name,
-            "Address is ": address,
-            "Email is ": email,
-            "Password is ": password,
-        }
+    if user.email in userDataDict:
+        return user.email,"Already registor"
+    userDataDict[user.email] = {
+        "Id is ": user.id,
+        "Name is " : user.name,
+        "Address is ": user.address,
+        "Email is ": user.email,
+        "Password is ": user.password,
+    }
 
-        return{
-            "Name is " : name,
-            "Email is ": email,
-            "Password is ": "Valid & String"
-        }
+    return{
+        "Name is " : user.name,
+        "Email is ": user.email,
+        "Password is ": "Valid & String"
+    }
 
-    except ValidationError as e:
-        return{
-            "Error": "Validation Failed", 
-            "Details": e.errors()
-        }
 
 
 @app.get("/userData")
@@ -94,6 +79,28 @@ def getUserData(
         return{
             "Message":"Invalid Email"
         }
+
+@app.get("/getAllData")
+def getAllData():
+    return userDataDict
+
+@app.put("/updateUserData")
+def updateUserData(
+    user : UserCredentials
+):
+    if user.email in userDataDict:
+        if userDataDict[user.email]["Id is "] == user.id:
+            userDataDict[user.email]["Password is "] = user.password
+
+            return{
+                "Message" : "Password updated successfully",
+                "Email is ": user.email
+            }
+        else:
+            return {"Error": "Incorrect ID for this email"}
+    else:
+        return {"Error": "User not found"}
+
         
 
 
